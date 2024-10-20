@@ -74,7 +74,7 @@ final public class RNBackgroundActionsTask extends HeadlessJsTaskService {
     HeadlessJsTaskConfig getTaskConfig(Intent intent) {
         final Bundle extras = intent.getExtras();
         if (extras != null) {
-            return new HeadlessJsTaskConfig(extras.getString("taskName"), Arguments.fromBundle(extras), 0, true);
+            return new HeadlessJsTaskConfig(extras.getString("taskName"), Arguments.fromBundle(extras), 5000, true);
         }
         return null;
     }
