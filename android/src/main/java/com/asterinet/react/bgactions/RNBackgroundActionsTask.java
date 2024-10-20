@@ -19,6 +19,9 @@ import com.facebook.react.HeadlessJsTaskService;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.jstasks.HeadlessJsTaskConfig;
 
+import android.util.Log;
+
+
 final public class RNBackgroundActionsTask extends HeadlessJsTaskService {
 
     public static final int SERVICE_NOTIFICATION_ID = 92901;
@@ -72,25 +75,34 @@ final public class RNBackgroundActionsTask extends HeadlessJsTaskService {
     @Override
     protected @Nullable
     HeadlessJsTaskConfig getTaskConfig(Intent intent) {
-        final Bundle extras = intent.getExtras();
-        if (extras != null) {
-            return new HeadlessJsTaskConfig(extras.getString("taskName"), Arguments.fromBundle(extras), 5000, true);
+        try {
+            Log.d("BACKGROUND_TASK","INIT getTaskConfig");
+            final Bundle extras = intent.getExtras();
+            if (extras != null) {
+                return new HeadlessJsTaskConfig(extras.getString("taskName"), Arguments.fromBundle(extras), 5000, true);
+            }
+        } catch(Exception e) {
+            Log.d("BACKGROUND_TASK_ERROR",e.getMessage());
         }
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        final Bundle extras = intent.getExtras();
-        if (extras == null) {
-            throw new IllegalArgumentException("Extras cannot be null");
-        }
-        final BackgroundTaskOptions bgOptions = new BackgroundTaskOptions(extras);
-        createNotificationChannel(bgOptions.getTaskTitle(), bgOptions.getTaskDesc()); // Necessary creating channel for API 26+
-        // Create the notification
-        final Notification notification = buildNotification(this, bgOptions);
+        try {
+            final Bundle extras = intent.getExtras();
+            if (extras == null) {
+                throw new IllegalArgumentException("Extras cannot be null");
+            }
+            final BackgroundTaskOptions bgOptions = new BackgroundTaskOptions(extras);
+            createNotificationChannel(bgOptions.getTaskTitle(), bgOptions.getTaskDesc()); // Necessary creating channel for API 26+
+            // Create the notification
+            final Notification notification = buildNotification(this, bgOptions);
 
-        startForeground(SERVICE_NOTIFICATION_ID, notification);
+            startForeground(SERVICE_NOTIFICATION_ID, notification);
+        } catch (Exception e) {
+            Log.d("BACKGROUND_TASK_START_ERROR",e.getMessage());
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 
+import android.util.Log;
+
 @SuppressWarnings("WeakerAccess")
 public class BackgroundActionsModule extends ReactContextBaseJavaModule {
 
@@ -49,6 +51,7 @@ public class BackgroundActionsModule extends ReactContextBaseJavaModule {
             reactContext.startService(currentServiceIntent);
             promise.resolve(null);
         } catch (Exception e) {
+            Log.d("START",e.getMessage());
             promise.reject(e);
         }
     }

@@ -75,17 +75,29 @@ class BackgroundServer extends EventEmitter {
      * @returns {Promise<void>}
      */
     async start(task, options) {
-        this._runnedTasks++;
-        this._currentOptions = this._normalizeOptions(options);
-        const finalTask = this._generateTask(task, options.parameters);
-        if (Platform.OS === 'android') {
-            AppRegistry.registerHeadlessTask(this._currentOptions.taskName, () => finalTask);
-            await RNBackgroundActions.start(this._currentOptions);
-            this._isRunning = true;
-        } else {
-            await RNBackgroundActions.start(this._currentOptions);
-            this._isRunning = true;
-            finalTask();
+        try {
+            this._runnedTasks++;
+            console.log("okx1");
+            this._currentOptions = this._normalizeOptions(options);
+            console.log("okx2");
+            const finalTask = this._generateTask(task, options.parameters);
+            console.log("okx3");
+            if (Platform.OS === 'android') {
+                console.log("okx4");
+                AppRegistry.registerHeadlessTask(this._currentOptions.taskName, () => finalTask);
+                console.log("okx5",this._currentOptions);
+                await RNBackgroundActions.start(this._currentOptions);
+                console.log("okx6");
+                this._isRunning = true;
+                console.log("okx7");
+            } else {
+                await RNBackgroundActions.start(this._currentOptions);
+                this._isRunning = true;
+                finalTask();
+            }
+            console.log("okx8");
+        } catch (e) {
+            console.log(e);
         }
     }
 
